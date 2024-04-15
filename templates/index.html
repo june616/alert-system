@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Help Alert System</title>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='js/alert.js') }}"></script>
+</head>
+
+<body>
+    <h1>Welcome to the Help Alert System</h1>
+    <div id="statusMessage">Ready to send help.</div>
+    <button id="helpButton">Send Help!</button>
+
+    <script>
+        var socket = io();
+    </script>
+</body>
+
+</html>
