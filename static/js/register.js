@@ -2,7 +2,7 @@ document.getElementById('registrationForm').addEventListener('submit', function 
     event.preventDefault();
     let username = document.getElementById('username').value;
     let password = document.getElementById('password').value;
-    let emergencyContact = document.getElementById('emergencyContact').value;
+    let emergencyContact = document.getElementById('contact').value;
 
     // Simple validation
     if (!username || !password || !emergencyContact) {
