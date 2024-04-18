@@ -18,4 +18,16 @@ document.getElementById('loginForm').addEventListener('submit', function (event)
         .then(response => response.json())
         .then(data => console.log(data))
         .catch(error => console.error('Error:', error));
+
+    // fetch('/login', {
+    //     method: 'POST',
+    //     headers: {
+    //         'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({username, password})
+    // }).then(response => {
+    //     if (response.redirected) {
+    //         window.location.href = response.url;
+    //     }
+    // }).catch(error => console.error('Error:', error));
 });

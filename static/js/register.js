@@ -21,4 +21,17 @@ document.getElementById('registrationForm').addEventListener('submit', function 
         .then(response => response.json())
         .then(data => console.log(data))
         .catch(error => console.error('Error:', error));
+
+
+    // fetch('/register', {
+    //     method: 'POST',
+    //     headers: {
+    //         'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({username, password, emergencyContact})
+    // }).then(response => {
+    //     if (response.redirected) {
+    //         window.location.href = response.url;
+    //     }
+    // }).catch(error => console.error('Error:', error));
 });

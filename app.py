@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, url_for, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_socketio import SocketIO, emit
@@ -28,10 +28,16 @@ def register():
         password = generate_password_hash(data['password'])
         contact = data['contact']
 
+        existing_user = User.query.filter_by(username=username).first()
+        if existing_user:
+            flash('Username already exists. Please choose a different one.')
+            return redirect(url_for('register'))
+
         user = User(username=username, password=password, contact=contact)
         db.session.add(user)
         db.session.commit()
 
+        # return redirect(url_for('index'))
         return jsonify({'message': 'Registered successfully'}), 201
 
 
@@ -44,8 +50,11 @@ def login():
         user = User.query.filter_by(username=data['username']).first()
 
         if user and check_password_hash(user.password, data['password']):
+            # return redirect(url_for('index'))
             return jsonify({'message': 'Login successful'}), 200
         else:
+            # flash('Login failed. Please check your username and password and try again.')
+            # return redirect(url_for('login'))
             return jsonify({'message': 'Login failed'}), 401
 
 
