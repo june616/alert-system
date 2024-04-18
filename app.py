@@ -10,38 +10,49 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 socketio = SocketIO(app)
 
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     contact = db.Column(db.String(20), nullable=False)
 
-@app.route('/register', methods=['POST'])
-def register():
-    data = request.json
-    username = data['username']
-    password = generate_password_hash(data['password'])
-    contact = data['contact']
-    
-    user = User(username=username, password=password, contact=contact)
-    db.session.add(user)
-    db.session.commit()
-    
-    return jsonify({'message': 'Registered successfully'}), 201
 
-@app.route('/login', methods=['POST'])
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'GET':
+        return render_template('register.html')
+    elif request.method == 'POST':
+        data = request.json
+        username = data['username']
+        password = generate_password_hash(data['password'])
+        contact = data['contact']
+
+        user = User(username=username, password=password, contact=contact)
+        db.session.add(user)
+        db.session.commit()
+
+        return jsonify({'message': 'Registered successfully'}), 201
+
+
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    data = request.json
-    user = User.query.filter_by(username=data['username']).first()
-    
-    if user and check_password_hash(user.password, data['password']):
-        return jsonify({'message': 'Login successful'}), 200
-    else:
-        return jsonify({'message': 'Login failed'}), 401
+    if request.method == 'GET':
+        return render_template('login.html')
+    elif request.method == 'POST':
+        data = request.json
+        user = User.query.filter_by(username=data['username']).first()
+
+        if user and check_password_hash(user.password, data['password']):
+            return jsonify({'message': 'Login successful'}), 200
+        else:
+            return jsonify({'message': 'Login failed'}), 401
+
 
 @app.route('/')
 def index():
     return render_template('index.html')
+
 
 @socketio.on('send_help')
 def handle_send_help(json):
@@ -54,6 +65,7 @@ def handle_send_help(json):
     address_info = response.json().get('display_name', 'Address not found')
 
     emit('help_response', {'message': 'Help is on the way!', 'location': address_info})
+
 
 if __name__ == '__main__':
     with app.app_context():

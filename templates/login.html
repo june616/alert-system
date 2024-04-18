@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+</head>
+<body>
+
+<!-- Login Form -->
+<h2>Login Form</h2>
+<form id="loginForm">
+    <label for="loginUsername">Username:</label>
+    <input type="text" id="loginUsername" name="username" required><br>
+    <label for="loginPassword">Password:</label>
+    <input type="password" id="loginPassword" name="password" required><br>
+    <button type="submit">Login</button>
+</form>
+
+
+<p>Need an account? <a href="{{ url_for('register') }}">Register here</a></p>
+
+
+</body>
+</html>
