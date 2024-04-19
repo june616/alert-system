@@ -1,37 +1,44 @@
-document.getElementById('registrationForm').addEventListener('submit', function (event) {
-    event.preventDefault();
-    let username = document.getElementById('username').value;
-    let password = document.getElementById('password').value;
-    let emergencyContact = document.getElementById('contact').value;
+document.addEventListener('DOMContentLoaded', function () {
+    // Attach the event listener to the form with id 'registrationForm'
+    let form = document.getElementById('registrationForm');
+    form.onsubmit = function (e) {
+        // Prevent the form from submitting the traditional way
+        e.preventDefault();
 
-    // Simple validation
-    if (!username || !password || !emergencyContact) {
-        alert('Please fill out all fields');
-        return;
-    }
+        // Get the form data
+        let username = document.getElementById('username').value;
+        let password = document.getElementById('password').value;
+        let contact = document.getElementById('contact').value;
 
-    // Asynchronous request to the backend
-    fetch('/register', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({username, password, emergencyContact})
-    })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error('Error:', error));
+        // Create an object to send as JSON
+        let formData = {
+            username: username,
+            password: password,
+            contact: contact
+        };
 
-
-    // fetch('/register', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({username, password, emergencyContact})
-    // }).then(response => {
-    //     if (response.redirected) {
-    //         window.location.href = response.url;
-    //     }
-    // }).catch(error => console.error('Error:', error));
+        // Use the Fetch API to send the form data
+        fetch('/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Handle response data
+                console.log(data);
+                if (data.message === 'Registered successfully') {
+                    // Maybe redirect to the login page or show a success message
+                    window.location.href = '/login'; // Redirect to login on success
+                } else {
+                    // Handle errors, show messages to the user, etc.
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    };
 });
