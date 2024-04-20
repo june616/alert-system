@@ -75,6 +75,32 @@ def handle_send_help(json):
 
     emit('help_response', {'message': 'Help is on the way!', 'location': address_info})
 
+@socketio.on('help_signal')
+def handle_help_signal(json):
+    user_id = json.get('id')
+    user = User.query.get(user_id)
+    if user:
+        emergency_contact = user.contact
+        # Assume `json` contains `latitude` and `longitude`
+        latitude = json.get('latitude')
+        longitude = json.get('longitude')
+
+        # You can also include code to reverse-geocode the coordinates to get a human-readable address
+        response = requests.get(
+            f"https://nominatim.openstreetmap.org/reverse?format=json&lat={latitude}&lon={longitude}"
+        )
+        address_info = response.json().get('display_name', 'Address not found')
+
+        # Generate an alert message or any other action required
+        alert_message = f"Help needed for user: {user.username}, at location: {address_info}. " \
+                        f"Emergency contact: {emergency_contact}"
+
+        # Emit a response back to the frontend or broadcast to an admin panel if needed
+        emit('help_response', {'message': alert_message})
+    else:
+        emit('help_response', {'message': 'User not found.'})
+
+
 
 if __name__ == '__main__':
     with app.app_context():
