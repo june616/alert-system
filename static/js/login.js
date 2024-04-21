@@ -27,12 +27,12 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 // Handle response data
                 console.log(data);
-                if (data.message === 'Login successful') {
-                    // Redirect to the home page or dashboard on success
-                    window.location.href = '/'; // Redirect to home on success
-                } else {
+                if (data.message === 'Login failed') {
                     // Handle errors, show messages to the user, etc.
                     alert('Login failed. Please check your username and password and try again.');
+                } else {
+                    localStorage.setItem('userID', data.user_id); // store user id
+                    window.location.href = '/'; // Redirect to home on success
                 }
             })
             .catch(error => {
